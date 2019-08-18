@@ -2,7 +2,7 @@ package io.etna.whatstheweather.di
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import io.etna.whatstheweather.di.main.MainModule
+import io.etna.whatstheweather.di.main.LocationDetailFragmentBuildersModule
 import io.etna.whatstheweather.di.main.MainViewModelsModule
 import io.etna.whatstheweather.ui.main.MainActivity
 
@@ -11,7 +11,7 @@ abstract class ActivityBuilderModule {
 
     @ContributesAndroidInjector(
         modules = [
-            MainModule::class,
+            LocationDetailFragmentBuildersModule::class,
             MainViewModelsModule::class
         ]
     )

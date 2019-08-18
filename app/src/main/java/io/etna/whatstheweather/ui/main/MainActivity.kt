@@ -5,12 +5,14 @@ import android.text.TextUtils
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import dagger.android.support.DaggerAppCompatActivity
 import io.etna.whatstheweather.R
 import io.etna.whatstheweather.model.Location
+import io.etna.whatstheweather.ui.main.location_detail.LocationDetailFragment
 import javax.inject.Inject
 
 
@@ -34,6 +36,7 @@ class MainActivity : DaggerAppCompatActivity() {
 
         mViewModel.locationWeather.observe(this, Observer<Location>{
             awesomeTextView.text = it.weather[0].description
+            inflateLocationDetail()
         })
 
         cityInputText.setOnEditorActionListener { v, actionId, _ ->
@@ -52,5 +55,11 @@ class MainActivity : DaggerAppCompatActivity() {
                     false
             }
         }
+    }
+
+    private fun inflateLocationDetail() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.main_container, LocationDetailFragment())
+            .commit()
     }
 }
