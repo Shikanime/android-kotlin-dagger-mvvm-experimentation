@@ -4,15 +4,13 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
-import android.widget.TextView
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import dagger.android.support.DaggerAppCompatActivity
 import io.etna.whatstheweather.R
-import io.etna.whatstheweather.model.Location
-import io.etna.whatstheweather.ui.main.location_detail.LocationDetailFragment
+import io.etna.whatstheweather.ui.main.BookmarksFragment.BookmarksFragment
+import io.etna.whatstheweather.ui.main.DetailFragment.DetailFragment
 import javax.inject.Inject
 
 
@@ -20,24 +18,22 @@ class MainActivity : DaggerAppCompatActivity() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var awesomeTextView: TextView
-    private lateinit var cityInputText: EditText
-
     private lateinit var mViewModel: MainViewModel
+
+    private lateinit var cityInputText: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        awesomeTextView = findViewById(R.id.logText)
         cityInputText = findViewById(R.id.cityInputText)
 
         mViewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
 
-        mViewModel.locationWeather.observe(this, Observer<Location>{
-            awesomeTextView.text = it.weather[0].description
-            inflateLocationDetail()
-        })
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.detail_container, DetailFragment())
+            .replace(R.id.bookmark_container, BookmarksFragment())
+            .commit()
 
         cityInputText.setOnEditorActionListener { v, actionId, _ ->
             when (actionId) {
@@ -55,11 +51,5 @@ class MainActivity : DaggerAppCompatActivity() {
                     false
             }
         }
-    }
-
-    private fun inflateLocationDetail() {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.main_container, LocationDetailFragment())
-            .commit()
     }
 }
