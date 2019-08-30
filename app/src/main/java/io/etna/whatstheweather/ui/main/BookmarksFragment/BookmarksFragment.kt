@@ -36,12 +36,6 @@ class BookmarksFragment: DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
         recyclerView = view.findViewById(R.id.recycler_view)
 
-        viewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
-        viewModel.favoriteLocationWeather.removeObservers(viewLifecycleOwner)
-        viewModel.favoriteLocationWeather.observe(viewLifecycleOwner, Observer{
-            adapter.locations = it
-        })
-
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.adapter = adapter
 
@@ -54,6 +48,13 @@ class BookmarksFragment: DaggerFragment() {
                     viewModel.removeFavoriteLocationWeather(adapter.locations[viewHolder.adapterPosition])
                 }
             })
+
+        viewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
+        viewModel.favoriteLocationWeather.removeObservers(viewLifecycleOwner)
+        viewModel.favoriteLocationWeather.observe(viewLifecycleOwner, Observer{
+            adapter.locations = it
+            adapter.notifyDataSetChanged()
+        })
 
     }
 }

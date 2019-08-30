@@ -13,10 +13,6 @@ class MainViewModel @Inject constructor(
     var locationWeather: MediatorLiveData<Location> = MediatorLiveData()
     var favoriteLocationWeather: MutableLiveData<MutableList<Location>> = MutableLiveData()
 
-    init {
-        favoriteLocationWeather.value = mutableListOf()
-    }
-
     fun getLocationWeather(query: String) {
         val source = weatherRepository.getLocationWeather(query)
         locationWeather.addSource(source) {
@@ -27,9 +23,10 @@ class MainViewModel @Inject constructor(
 
     fun addFavoriteLocationWeather() {
         favoriteLocationWeather.value = if (favoriteLocationWeather.value !== null) {
-            mutableListOf(locationWeather.value!!)
-        } else {
+            favoriteLocationWeather.value!!.add(locationWeather.value!!)
             favoriteLocationWeather.value
+        } else {
+            mutableListOf(locationWeather.value!!)
         }
     }
 

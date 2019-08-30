@@ -31,7 +31,7 @@ class BookmarksRecycleAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inner class BookmarkViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        internal var name: TextView = itemView.findViewById(R.id.title)
+        internal var name: TextView = itemView.findViewById(R.id.name)
 
         fun bind(location: Location) {
             name.text = location.name
