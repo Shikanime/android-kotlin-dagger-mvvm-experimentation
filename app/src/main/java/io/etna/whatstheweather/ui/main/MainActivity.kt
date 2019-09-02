@@ -4,19 +4,16 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
-import dagger.android.support.DaggerAppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import io.etna.whatstheweather.R
 import io.etna.whatstheweather.ui.main.BookmarksFragment.BookmarksFragment
 import io.etna.whatstheweather.ui.main.DetailFragment.DetailFragment
-import javax.inject.Inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainActivity : DaggerAppCompatActivity() {
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+class MainActivity : AppCompatActivity() {
 
-    private lateinit var mViewModel: MainViewModel
+    private val mViewModel: MainViewModel by viewModel()
+
     private lateinit var cityInputText: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,8 +21,6 @@ class MainActivity : DaggerAppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         cityInputText = findViewById(R.id.city_input)
-
-        mViewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
 
         supportFragmentManager.beginTransaction()
             .replace(R.id.bookmark_container, BookmarksFragment())

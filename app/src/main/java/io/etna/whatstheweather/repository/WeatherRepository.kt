@@ -1,22 +1,14 @@
 package io.etna.whatstheweather.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.LiveDataReactiveStreams.fromPublisher
-import io.etna.whatstheweather.Resource
-import io.etna.whatstheweather.model.Location
 import io.etna.whatstheweather.service.openweatherapi.OpenWeatherApiService
 import io.etna.whatstheweather.util.OpenWeatherConstants
-import io.reactivex.schedulers.Schedulers
-import javax.inject.Inject
+import org.koin.core.KoinComponent
 
-class WeatherRepository @Inject constructor(
+
+class WeatherRepository constructor(
     private val openWeatherApiService: OpenWeatherApiService
-) {
-    fun getLocationWeather(query: String): LiveData<Location> {
-        return fromPublisher(
-            openWeatherApiService.getLocationWeather(query, OpenWeatherConstants.API_APP_ID)
-                .onErrorReturn { Location() }
-                .subscribeOn(Schedulers.io())
-        )
-    }
+) : KoinComponent {
+
+    suspend fun getLocationWeather(query: String) =
+        openWeatherApiService.getLocationWeather(query, OpenWeatherConstants.API_APP_ID)
 }

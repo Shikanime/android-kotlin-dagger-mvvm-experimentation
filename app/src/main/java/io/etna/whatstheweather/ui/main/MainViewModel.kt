@@ -3,24 +3,33 @@ package io.etna.whatstheweather.ui.main
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import io.etna.whatstheweather.Status
+import androidx.lifecycle.viewModelScope
 import io.etna.whatstheweather.model.Location
 import io.etna.whatstheweather.repository.WeatherRepository
-import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class MainViewModel @Inject constructor(
-    var weatherRepository: WeatherRepository
+
+class MainViewModel constructor(
+    private val weatherRepository: WeatherRepository
 ) : ViewModel() {
+
     var locationWeather: MediatorLiveData<Location> = MediatorLiveData()
-    var favoriteLocationWeather: MutableLiveData<MutableList<Location>> = MutableLiveData()
 
     fun getLocationWeather(query: String) {
-        val source = weatherRepository.getLocationWeather(query)
-        locationWeather.addSource(source) {
-            locationWeather.value = it
-            locationWeather.removeSource(source)
+        viewModelScope.launch {
+            locationWeather.value = withContext(Dispatchers.IO) {
+                try {
+                    weatherRepository.getLocationWeather(query)
+                } catch (e: retrofit2.HttpException) {
+                    null
+                }
+            }
         }
     }
+
+    var favoriteLocationWeather: MutableLiveData<MutableList<Location>> = MutableLiveData()
 
     fun addFavoriteLocationWeather() {
         favoriteLocationWeather.value = if (favoriteLocationWeather.value !== null) {

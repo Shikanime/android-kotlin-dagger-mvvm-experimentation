@@ -4,27 +4,23 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.ItemTouchHelper
-import dagger.android.support.DaggerFragment
-import io.etna.whatstheweather.ui.main.MainViewModel
-import javax.inject.Inject
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import io.etna.whatstheweather.R
+import io.etna.whatstheweather.ui.main.MainViewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
-class BookmarksFragment: DaggerFragment() {
+class BookmarksFragment : Fragment() {
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val mViewModel: MainViewModel by sharedViewModel()
 
     private lateinit var mAdapter: BookmarksRecycleAdapter
     private lateinit var mLayoutManager: RecyclerView.LayoutManager
-    private lateinit var mViewModel: MainViewModel
     private lateinit var recyclerView: RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -52,8 +48,6 @@ class BookmarksFragment: DaggerFragment() {
         })
 
         touchHelper.attachToRecyclerView(recyclerView)
-
-        mViewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
 
         mViewModel.favoriteLocationWeather.removeObservers(viewLifecycleOwner)
         mViewModel.favoriteLocationWeather.observe(viewLifecycleOwner, Observer{

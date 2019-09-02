@@ -1,12 +1,22 @@
 package io.etna.whatstheweather
 
-import dagger.android.AndroidInjector
-import dagger.android.DaggerApplication
-import io.etna.whatstheweather.di.DaggerAppComponent
+import android.app.Application
+import io.etna.whatstheweather.di.appModule
+import io.etna.whatstheweather.di.mainModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
 
-class WhatsTheWeatherApp : DaggerApplication() {
 
-    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-        return DaggerAppComponent.builder().application(this).build()
+class WhatsTheWeatherApp : Application() {
+
+    override fun onCreate() {
+        super.onCreate()
+        startKoin {
+            androidLogger()
+            androidContext(this@WhatsTheWeatherApp)
+            modules(appModule)
+            modules(mainModule)
+        }
     }
 }

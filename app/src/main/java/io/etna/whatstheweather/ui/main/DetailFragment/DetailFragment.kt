@@ -4,28 +4,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
-import dagger.android.support.DaggerFragment
 import io.etna.whatstheweather.R
 import io.etna.whatstheweather.ui.main.MainViewModel
-import javax.inject.Inject
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
-class DetailFragment: DaggerFragment() {
+class DetailFragment : Fragment() {
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val mViewModel: MainViewModel by sharedViewModel()
 
-    private lateinit var mViewModel: MainViewModel
-    private lateinit var nameTextView: TextView
-    private lateinit var weatherDescriptionTextView: TextView
-    private lateinit var visibilityTextView: TextView
-    private lateinit var iconImageView: ImageView
+    private lateinit var nameTextView: AppCompatTextView
+    private lateinit var weatherDescriptionTextView: AppCompatTextView
+    private lateinit var visibilityTextView: AppCompatTextView
+    private lateinit var iconImageView: AppCompatImageView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_detail, container, false)
@@ -38,8 +34,6 @@ class DetailFragment: DaggerFragment() {
         iconImageView = view.findViewById(R.id.location_weather_icon)
         weatherDescriptionTextView = view.findViewById(R.id.location_weather_description)
         visibilityTextView = view.findViewById(R.id.location_visibility)
-
-        mViewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
 
         mViewModel.locationWeather.removeObservers(viewLifecycleOwner)
         mViewModel.locationWeather.observe(viewLifecycleOwner, Observer{
