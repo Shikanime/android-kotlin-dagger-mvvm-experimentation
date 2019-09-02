@@ -1,5 +1,6 @@
 package io.etna.whatstheweather.di.main
 
+import android.app.Application
 import dagger.Module
 import dagger.Provides
 import io.etna.whatstheweather.ui.main.BookmarksFragment.BookmarksRecycleAdapter

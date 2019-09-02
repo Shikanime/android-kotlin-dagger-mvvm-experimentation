@@ -25,8 +25,8 @@ class BookmarksFragment: DaggerFragment() {
     @Inject
     lateinit var adapter: BookmarksRecycleAdapter
 
-    lateinit var viewModel: MainViewModel
-    lateinit var recyclerView: RecyclerView
+    private lateinit var mViewModel: MainViewModel
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_bookmarks, container, false)
@@ -39,19 +39,22 @@ class BookmarksFragment: DaggerFragment() {
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.adapter = adapter
 
-        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT) {
-                override fun onMove(recyclerView: RecyclerView, viewHolder: ViewHolder, target: ViewHolder): Boolean {
-                    return false
-                }
+        val touchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT) {
+            override fun onMove(recyclerView: RecyclerView, viewHolder: ViewHolder, target: ViewHolder): Boolean {
+                return false
+            }
 
-                override fun onSwiped(viewHolder: ViewHolder, direction: Int) {
-                    viewModel.removeFavoriteLocationWeather(adapter.locations[viewHolder.adapterPosition])
-                }
-            })
+            override fun onSwiped(viewHolder: ViewHolder, direction: Int) {
+                mViewModel.removeFavoriteLocationWeather(adapter.locations[viewHolder.adapterPosition])
+            }
+        })
 
-        viewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
-        viewModel.favoriteLocationWeather.removeObservers(viewLifecycleOwner)
-        viewModel.favoriteLocationWeather.observe(viewLifecycleOwner, Observer{
+        touchHelper.attachToRecyclerView(recyclerView)
+
+        mViewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
+
+        mViewModel.favoriteLocationWeather.removeObservers(viewLifecycleOwner)
+        mViewModel.favoriteLocationWeather.observe(viewLifecycleOwner, Observer{
             adapter.locations = it
             adapter.notifyDataSetChanged()
         })
