@@ -22,9 +22,8 @@ class BookmarksFragment: DaggerFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    @Inject
-    lateinit var adapter: BookmarksRecycleAdapter
-
+    private lateinit var mAdapter: BookmarksRecycleAdapter
+    private lateinit var mLayoutManager: RecyclerView.LayoutManager
     private lateinit var mViewModel: MainViewModel
     private lateinit var recyclerView: RecyclerView
 
@@ -36,8 +35,10 @@ class BookmarksFragment: DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
         recyclerView = view.findViewById(R.id.recycler_view)
 
-        recyclerView.layoutManager = LinearLayoutManager(activity)
-        recyclerView.adapter = adapter
+        mLayoutManager = LinearLayoutManager(activity)
+        recyclerView.layoutManager = mLayoutManager
+        mAdapter = BookmarksRecycleAdapter(context!!)
+        recyclerView.adapter = mAdapter
 
         val touchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT) {
             override fun onMove(recyclerView: RecyclerView, viewHolder: ViewHolder, target: ViewHolder): Boolean {
@@ -45,7 +46,8 @@ class BookmarksFragment: DaggerFragment() {
             }
 
             override fun onSwiped(viewHolder: ViewHolder, direction: Int) {
-                mViewModel.removeFavoriteLocationWeather(adapter.locations[viewHolder.adapterPosition])
+                mViewModel.removeFavoriteLocationWeather(mAdapter.locations[viewHolder.adapterPosition])
+                mAdapter.notifyDataSetChanged()
             }
         })
 
@@ -55,8 +57,8 @@ class BookmarksFragment: DaggerFragment() {
 
         mViewModel.favoriteLocationWeather.removeObservers(viewLifecycleOwner)
         mViewModel.favoriteLocationWeather.observe(viewLifecycleOwner, Observer{
-            adapter.locations = it
-            adapter.notifyDataSetChanged()
+            mAdapter.locations = it
+            mAdapter.notifyDataSetChanged()
         })
 
     }

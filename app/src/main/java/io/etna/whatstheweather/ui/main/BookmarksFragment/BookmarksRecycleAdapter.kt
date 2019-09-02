@@ -4,27 +4,37 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import io.etna.whatstheweather.R
 import io.etna.whatstheweather.model.Location
 
 
-class BookmarksRecycleAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class BookmarksRecycleAdapter constructor(
+    private var context: Context
+) : RecyclerView.Adapter<BookmarksRecycleAdapter.BookmarkViewHolder>() {
 
     internal var locations: List<Location> = ArrayList()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookmarkViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.layout_list_bookmark, parent, false)
+            .inflate(R.layout.fragment_detail, parent, false)
         return BookmarkViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as BookmarkViewHolder).bind(locations[position])
+    override fun onBindViewHolder(holder: BookmarkViewHolder, position: Int) {
+        val location = locations[position]
+
+        if (location.weather.isNotEmpty()) {
+            Glide
+                .with(context)
+                .load("https://openweathermap.org/img/wn/${location.weather[0].icon}.png")
+                .into(holder.icon)
+        }
+
+        holder.bind(location)
     }
 
     override fun getItemCount(): Int {
@@ -33,18 +43,27 @@ class BookmarksRecycleAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
 
     inner class BookmarkViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        private var name: TextView = itemView.findViewById(R.id.name)
-        private var visibility: TextView = itemView.findViewById(R.id.visibility)
-        private var weatherDescription: TextView = itemView.findViewById(R.id.weather_description)
+        internal var icon: ImageView = itemView.findViewById(R.id.location_weather_icon)
+        internal var name: TextView = itemView.findViewById(R.id.location_name)
+        internal var visibility: TextView = itemView.findViewById(R.id.location_visibility)
+        internal var weatherDescription: TextView = itemView.findViewById(R.id.location_weather_description)
 
         fun bind(location: Location) {
-            name.text = location.name
-            visibility.text = location.visibility.toString()
-            weatherDescription.text = location.weather[0].description
+            if (location.name == "") {
+                name.text = "No name"
+            } else {
+                name.text = location.name
+            }
+            if (location.visibility < 0) {
+                visibility.text = "No visibility"
+            } else {
+                visibility.text = location.visibility.toString()
+            }
+            if (location.weather.isEmpty()) {
+                weatherDescription.text = "No weather description"
+            } else {
+                weatherDescription.text = location.weather[0].description
+            }
         }
     }
 }
-
-
-
-

@@ -30,12 +30,12 @@ data class Clouds(
 @Entity
 data class Location(
     @PrimaryKey
-    var id: Int = 0,
-    var weather: List<Weather>,
-    var main: Main,
-    var visibility: Int = 0,
-    var wind: Wind,
-    var clouds: Clouds,
+    var id: Int = -1,
+    var weather: List<Weather> = emptyList(),
+    var main: Main? = null,
+    var visibility: Int = -1,
+    var wind: Wind? = null,
+    var clouds: Clouds? = null,
     var name: String = ""
 )
 

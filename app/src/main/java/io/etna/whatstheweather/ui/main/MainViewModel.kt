@@ -3,6 +3,7 @@ package io.etna.whatstheweather.ui.main
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import io.etna.whatstheweather.Status
 import io.etna.whatstheweather.model.Location
 import io.etna.whatstheweather.repository.WeatherRepository
 import javax.inject.Inject

@@ -5,4 +5,9 @@
     <string name="country">France</string>
     <string name="weather_icon_description">Weather icon</string>
     <string name="add_favorite">Add favorite</string>
+    <string name="favorite_category">Favorites</string>
+    <string name="no_weather_description">No weather description</string>
+    <string name="no_visibility">No visibility</string>
+    <string name="no_name">No name</string>
+    <string name="favorite_title">Favorite</string>
 </resources>
