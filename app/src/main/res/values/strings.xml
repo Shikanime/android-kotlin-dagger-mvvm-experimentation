@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">WhatsTheWeather</string>
+    <string name="description_weather_icon">Weather icon</string>
+    <string name="hint_city_input">Enter a city…</string>
+    <string name="title_search">Search</string>
+    <string name="title_favorite">Favorite</string>
+</resources>
