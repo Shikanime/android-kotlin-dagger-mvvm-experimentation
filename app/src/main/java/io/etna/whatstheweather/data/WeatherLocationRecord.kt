@@ -14,7 +14,7 @@ data class WeatherLocationRecord(
     var id: Int,
     var name: String,
     var visibility: Int,
-    var weather: List<WeatherRecord>,
+    var weather: List<Weather>,
     @Embedded
     var main: Main,
     @Embedded
@@ -43,7 +43,7 @@ data class WeatherLocationRecord(
     )
 
     @Entity
-    data class WeatherRecord(
+    data class Weather(
         var weatherLocationId: Int,
         var main: String,
         var description: String,
@@ -55,18 +55,18 @@ data class WeatherLocationRecord(
         private val gson = Gson()
 
         @TypeConverter
-        fun toList(data: String?): List<WeatherRecord> {
+        fun toList(data: String?): List<Weather> {
             if (data == null) {
                 return Collections.emptyList()
             }
 
-            val listType = object : TypeToken<List<WeatherRecord>>() {}.type
+            val listType = object : TypeToken<List<Weather>>() {}.type
 
             return gson.fromJson(data, listType)
         }
 
         @TypeConverter
-        fun toString(someObjects: List<WeatherRecord>): String {
+        fun toString(someObjects: List<Weather>): String {
             return gson.toJson(someObjects)
         }
     }

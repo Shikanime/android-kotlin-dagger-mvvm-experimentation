@@ -10,7 +10,7 @@ import androidx.room.TypeConverters
     exportSchema = false
 )
 @TypeConverters(WeatherLocationRecord.DataTypeConverter::class)
-abstract class WeatherLocationFavoriteDatabase : RoomDatabase() {
+abstract class WeatherDatabase : RoomDatabase() {
 
     abstract fun weatherLocationDao(): WeatherLocationDao
 }

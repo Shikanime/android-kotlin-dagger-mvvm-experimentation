@@ -1,4 +1,4 @@
-package io.etna.whatstheweather.ui.main
+package io.etna.whatstheweather.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -12,36 +12,35 @@ import io.etna.whatstheweather.R
 import io.etna.whatstheweather.data.WeatherLocationRecord
 
 
-class FavoriteRecycleAdapter constructor(
+class WeatherLocationAdapter(
     private var context: Context
-) : RecyclerView.Adapter<FavoriteRecycleAdapter.BookmarkViewHolder>() {
+) : RecyclerView.Adapter<WeatherLocationAdapter.WeatherLocationViewHolder>() {
 
     internal var weatherLocations: List<WeatherLocationRecord> = ArrayList()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookmarkViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherLocationViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.fragment_detail, parent, false)
-        return BookmarkViewHolder(view)
+            .inflate(R.layout.fragment_item, parent, false)
+        return WeatherLocationViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: BookmarkViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: WeatherLocationViewHolder, position: Int) {
         val location = weatherLocations[position]
 
-        if (location.weather.isNotEmpty()) {
+        if (location.weather.isNotEmpty() and location.weather.first().icon.isNotBlank()) {
             Glide
                 .with(context)
-                .load("https://openweathermap.org/img/wn/${location.weather[0].icon}.png")
+                .load("https://openweathermap.org/img/wn/${location.weather.first().icon}@2x.png")
                 .into(holder.icon)
         }
 
         holder.bind(location)
     }
 
-    override fun getItemCount(): Int {
-        return weatherLocations.size
-    }
+    override fun getItemCount() =
+        weatherLocations.size
 
-    inner class BookmarkViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class WeatherLocationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         internal var icon: ImageView = itemView.findViewById(R.id.location_weather_icon)
         internal var name: TextView = itemView.findViewById(R.id.location_name)
@@ -58,8 +57,9 @@ class FavoriteRecycleAdapter constructor(
                 visibility.text = weatherLocationRecord.visibility.toString()
             }
 
-            if (weatherLocationRecord.weather.isNotEmpty()) {
-                weatherDescription.text = weatherLocationRecord.weather[0].description
+            if (weatherLocationRecord.weather.isNotEmpty() and
+                weatherLocationRecord.weather.first().icon.isNotBlank()) {
+                weatherDescription.text = weatherLocationRecord.weather.first().description
             }
         }
     }

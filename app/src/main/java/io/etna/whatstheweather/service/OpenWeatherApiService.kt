@@ -1,6 +1,7 @@
 package io.etna.whatstheweather.service.openweatherapi
 
 import io.etna.whatstheweather.data.WeatherLocationRecord
+import io.reactivex.Flowable
 import retrofit2.http.GET
 import retrofit2.http.Query
 
